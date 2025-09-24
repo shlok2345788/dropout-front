@@ -15,19 +15,61 @@ const firebaseConfig = {
 };
 
 // Check if Firebase app is already initialized
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let app;
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+  throw new Error('Failed to initialize Firebase. Please check your configuration.');
+}
 
 // Export Analytics only if supported (SSR/build friendly)
 let analytics = null;
-(async () => {
-  try {
-    if (typeof window !== 'undefined' && await isAnalyticsSupported()) {
-      analytics = getAnalytics(app);
+if (typeof window !== 'undefined') {
+  (async () => {
+    try {
+      if (await isAnalyticsSupported()) {
+        analytics = getAnalytics(app);
+      }
+    } catch (e) {
+      console.warn('Firebase Analytics not available:', e.message);
     }
-  } catch (e) {
-    // No-op: analytics not critical
-  }
-})();
+  })();
+}
 
 export const auth = getAuth(app);
+
+// Utility function to check if current domain is authorized
+export const isDomainAuthorized = () => {
+  const currentDomain = window.location.hostname;
+  const authorizedDomains = [
+    'localhost',
+    'student-prediction-eec30.firebaseapp.com',
+    // Add your Vercel domains here or use environment variable
+    process.env.REACT_APP_VERCEL_URL || ''
+  ];
+  
+  // Check for Vercel domain patterns
+  const isVercelDomain = currentDomain.includes('vercel.app') || 
+                        currentDomain.includes('dropout-front');
+  
+  return authorizedDomains.some(domain => 
+    currentDomain === domain || currentDomain.includes(domain)
+  ) || isVercelDomain;
+};
+
+// Helper function for better error messages
+export const getAuthErrorMessage = (error) => {
+  switch (error.code) {
+    case 'auth/unauthorized-domain':
+      return `Domain "${window.location.hostname}" is not authorized. Please add it to Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+    case 'auth/popup-blocked':
+      return 'Popup was blocked. Please allow popups for this site and try again.';
+    case 'auth/popup-closed-by-user':
+      return 'Authentication cancelled by user.';
+    default:
+      return error.message || 'An authentication error occurred.';
+  }
+};
+
 export { app, analytics };
