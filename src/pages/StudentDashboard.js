@@ -264,18 +264,6 @@ const StudentDashboard = () => {
             >
               Complete Assessment Form
             </Button>
-            
-            <Button 
-              variant="outlined" 
-              size="large" 
-              onClick={() => navigate('/improved-form')} 
-              sx={{ 
-                px: 4, 
-                py: 1.5
-              }}
-            >
-              Try Improved Form
-            </Button>
           </Box>
           
           <Box sx={{ mt: 4 }}>
@@ -717,6 +705,64 @@ const StudentDashboard = () => {
             </Grid>
           )}
         </Box>
+      </Paper>
+
+      {/* Exam Progress Tracker */}
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          <School sx={{ mr: 1, verticalAlign: 'middle' }} />
+          Exam Progress Tracker
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Typography variant="subtitle1" gutterBottom fontWeight="bold">
+                  Target Exam
+                </Typography>
+                <Typography variant="h5" color="primary" gutterBottom>
+                  {student_info?.target_exam || 'Not specified'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Your academic preparation focus
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Typography variant="subtitle1" gutterBottom fontWeight="bold">
+                  Academic Performance
+                </Typography>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Typography variant="h5" color="success.main">
+                    {student_info?.tenth_percentage || student_info?.current_gpa || 'N/A'}
+                    {student_info?.tenth_percentage || student_info?.current_gpa ? '%' : ''}
+                  </Typography>
+                  <Chip 
+                    label={student_info?.current_class || 'Class not specified'} 
+                    size="small" 
+                    sx={{ ml: 2 }} 
+                  />
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Current academic standing
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          {student_info?.current_stream && (
+            <Grid item xs={12}>
+              <Alert severity="info" sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  <strong>Current Stream:</strong> {student_info.current_stream} | 
+                  <strong> Target Exam:</strong> {student_info?.target_exam || 'Please specify your target exam in the assessment form'}
+                </Typography>
+              </Alert>
+            </Grid>
+          )}
+        </Grid>
       </Paper>
 
       {/* Progress Tracking */}
