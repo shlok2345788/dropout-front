@@ -138,14 +138,67 @@ const Signup = () => {
     <Box 
       sx={{ 
         minHeight: '100vh', 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%)', 
         display: 'flex', 
         alignItems: 'center',
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      {/* Background Pattern */}
+      {/* Animated Background Elements */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `
+            radial-gradient(circle at 25% 25%, ${alpha('#ff6b6b', 0.15)} 0%, transparent 40%),
+            radial-gradient(circle at 75% 75%, ${alpha('#4ecdc4', 0.15)} 0%, transparent 40%),
+            radial-gradient(circle at 75% 25%, ${alpha('#45b7d1', 0.1)} 0%, transparent 50%),
+            radial-gradient(circle at 25% 75%, ${alpha('#96ceb4', 0.1)} 0%, transparent 50%)
+          `,
+          animation: 'float 20s ease-in-out infinite',
+          '@keyframes float': {
+            '0%, 100%': { transform: 'translate(0px, 0px)' },
+            '33%': { transform: 'translate(30px, -30px)' },
+            '66%': { transform: 'translate(-20px, 20px)' }
+          }
+        }}
+      />
+
+      {/* Floating Geometric Shapes */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '120px',
+          height: '120px',
+          borderRadius: '50%',
+          background: alpha('#ffffff', 0.05),
+          top: '15%',
+          right: '10%',
+          animation: 'floatUp 18s ease-in-out infinite',
+          '@keyframes floatUp': {
+            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+            '50%': { transform: 'translateY(-25px) rotate(180deg)' }
+          }
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '80px',
+          height: '80px',
+          borderRadius: '50%',
+          background: alpha('#ffffff', 0.03),
+          bottom: '15%',
+          left: '8%',
+          animation: 'floatUp 15s ease-in-out infinite reverse'
+        }}
+      />
+
+      {/* Background Grid Pattern */}
       <Box
         sx={{
           position: 'absolute',
@@ -154,9 +207,11 @@ const Signup = () => {
           right: 0,
           bottom: 0,
           backgroundImage: `
-            radial-gradient(circle at 20% 80%, ${alpha('#ffffff', 0.1)} 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, ${alpha('#ffffff', 0.1)} 0%, transparent 50%)
+            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
           `,
+          backgroundSize: '50px 50px',
+          opacity: 0.3
         }}
       />
 
@@ -187,44 +242,86 @@ const Signup = () => {
                 elevation={24} 
                 sx={{ 
                   p: { xs: 4, sm: 6 }, 
-                  borderRadius: 6, 
-                  background: 'rgba(255, 255, 255, 0.95)', 
-                  backdropFilter: 'blur(20px)', 
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.2)'
+                  borderRadius: 8, 
+                  background: 'rgba(255, 255, 255, 0.98)', 
+                  backdropFilter: 'blur(30px)', 
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: `
+                    0 25px 50px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.6)
+                  `,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    background: 'linear-gradient(90deg, #667eea, #764ba2, #667eea)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 3s ease-in-out infinite',
+                    '@keyframes shimmer': {
+                      '0%': { backgroundPosition: '-200% 0' },
+                      '100%': { backgroundPosition: '200% 0' }
+                    }
+                  }
                 }}
               >
-                <Box textAlign="center" mb={4}>
-                  <Box 
-                    sx={{
-                      display: 'inline-flex',
-                      p: 2,
-                      borderRadius: '20px',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      mb: 3,
-                      boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)'
-                    }}
-                  >
-                    <SignupIcon sx={{ fontSize: '2rem', color: 'white' }} />
-                  </Box>
+                <Box textAlign="center" mb={5}>
+                  <Fade in timeout={1200}>
+                    <Box 
+                      sx={{
+                        display: 'inline-flex',
+                        p: 3,
+                        borderRadius: '24px',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        mb: 3,
+                        boxShadow: `
+                          0 12px 40px rgba(102, 126, 234, 0.4),
+                          inset 0 2px 0 rgba(255, 255, 255, 0.3)
+                        `,
+                        position: 'relative',
+                        animation: 'pulse 2s ease-in-out infinite',
+                        '@keyframes pulse': {
+                          '0%, 100%': { transform: 'scale(1)' },
+                          '50%': { transform: 'scale(1.05)' }
+                        }
+                      }}
+                    >
+                      <SignupIcon sx={{ fontSize: '2.5rem', color: 'white' }} />
+                    </Box>
+                  </Fade>
                   
                   <Typography 
                     variant="h3" 
                     component="h1" 
                     gutterBottom 
                     sx={{ 
-                      fontWeight: 800, 
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      fontWeight: 900, 
+                      background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%)',
                       backgroundClip: 'text',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
-                      mb: 1
+                      mb: 1,
+                      fontSize: { xs: '2rem', sm: '3rem' },
+                      textShadow: '0 4px 8px rgba(0,0,0,0.1)'
                     }}
                   >
-                    Create Account
+                    Join Us Today! 🚀
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem' }}>
-                    Join thousands of educators transforming student outcomes
+                  <Typography 
+                    variant="body1" 
+                    color="text.secondary" 
+                    sx={{ 
+                      fontSize: '1.2rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.5px',
+                      lineHeight: 1.6
+                    }}
+                  >
+                    Transform education with AI-powered insights
                   </Typography>
                 </Box>
 
@@ -234,8 +331,8 @@ const Signup = () => {
                   </Alert>
                 )}
 
-                <Box component="form" onSubmit={handleEmailSignup} sx={{ mb: 3 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box component="form" onSubmit={handleEmailSignup} sx={{ mb: 4 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}>
                     <TextField 
                       fullWidth 
                       label="Full Name" 
@@ -245,19 +342,44 @@ const Signup = () => {
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <Person />
+                            <Person sx={{ color: '#667eea' }} />
                           </InputAdornment>
                         ),
                       }}
                       sx={{
                         '& .MuiOutlinedInput-root': {
-                          borderRadius: 3,
-                          '&:hover fieldset': {
+                          borderRadius: 2,
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e0e0e0',
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
                             borderColor: '#667eea',
+                            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)',
+                            '& fieldset': {
+                              borderColor: '#667eea'
+                            }
                           },
-                          '&.Mui-focused fieldset': {
+                          '&.Mui-focused': {
                             borderColor: '#667eea',
+                            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.25)',
+                            '& fieldset': {
+                              borderColor: '#667eea',
+                              borderWidth: '2px'
+                            }
+                          },
+                          '& fieldset': {
+                            borderColor: '#e0e0e0'
                           }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: '#666',
+                          '&.Mui-focused': {
+                            color: '#667eea',
+                            fontWeight: 600
+                          }
+                        },
+                        '& .MuiInputBase-input': {
+                          color: '#333'
                         }
                       }}
                     />
@@ -273,19 +395,44 @@ const Signup = () => {
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <Email />
+                            <Email sx={{ color: '#667eea' }} />
                           </InputAdornment>
                         ),
                       }}
                       sx={{
                         '& .MuiOutlinedInput-root': {
-                          borderRadius: 3,
-                          '&:hover fieldset': {
+                          borderRadius: 2,
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e0e0e0',
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
                             borderColor: '#667eea',
+                            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)',
+                            '& fieldset': {
+                              borderColor: '#667eea'
+                            }
                           },
-                          '&.Mui-focused fieldset': {
+                          '&.Mui-focused': {
                             borderColor: '#667eea',
+                            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.25)',
+                            '& fieldset': {
+                              borderColor: '#667eea',
+                              borderWidth: '2px'
+                            }
+                          },
+                          '& fieldset': {
+                            borderColor: '#e0e0e0'
                           }
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: '#666',
+                          '&.Mui-focused': {
+                            color: '#667eea',
+                            fontWeight: 600
+                          }
+                        },
+                        '& .MuiInputBase-input': {
+                          color: '#333'
                         }
                       }}
                     />
@@ -302,7 +449,7 @@ const Signup = () => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <Lock />
+                              <Lock sx={{ color: '#667eea' }} />
                             </InputAdornment>
                           ),
                           endAdornment: (
@@ -310,6 +457,12 @@ const Signup = () => {
                               <IconButton
                                 onClick={() => setShowPassword(!showPassword)}
                                 edge="end"
+                                sx={{ 
+                                  color: '#667eea',
+                                  '&:hover': { 
+                                    backgroundColor: alpha('#667eea', 0.1) 
+                                  } 
+                                }}
                               >
                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                               </IconButton>
@@ -318,13 +471,38 @@ const Signup = () => {
                         }}
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            borderRadius: 3,
-                            '&:hover fieldset': {
+                            borderRadius: 2,
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #e0e0e0',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
                               borderColor: '#667eea',
+                              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)',
+                              '& fieldset': {
+                                borderColor: '#667eea'
+                              }
                             },
-                            '&.Mui-focused fieldset': {
+                            '&.Mui-focused': {
                               borderColor: '#667eea',
+                              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.25)',
+                              '& fieldset': {
+                                borderColor: '#667eea',
+                                borderWidth: '2px'
+                              }
+                            },
+                            '& fieldset': {
+                              borderColor: '#e0e0e0'
                             }
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: '#666',
+                            '&.Mui-focused': {
+                              color: '#667eea',
+                              fontWeight: 600
+                            }
+                          },
+                          '& .MuiInputBase-input': {
+                            color: '#333'
                           }
                         }}
                       />
@@ -371,13 +549,25 @@ const Signup = () => {
                       size="large"
                       disabled={loading}
                       sx={{
-                        py: 1.8,
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
-                        borderRadius: 3,
+                        py: 2.2,
+                        fontSize: '1.2rem',
+                        fontWeight: 700,
+                        borderRadius: 4,
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        boxShadow: '0 8px 32px rgba(102, 126, 234, 0.37)',
+                        boxShadow: '0 12px 40px rgba(102, 126, 234, 0.4)',
+                        position: 'relative',
+                        overflow: 'hidden',
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: '-100%',
+                          width: '100%',
+                          height: '100%',
+                          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                          transition: 'left 0.5s',
+                        },
                         '&:hover': {
                           transform: 'translateY(-2px)',
                           boxShadow: '0 12px 40px rgba(102, 126, 234, 0.5)'

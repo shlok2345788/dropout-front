@@ -122,17 +122,7 @@ const StudentDashboardWrapper = () => {
             Complete Assessment Form
           </Button>
           
-          <Button 
-            variant="outlined" 
-            size="large" 
-            onClick={() => navigate('/improved-form')} 
-            sx={{ 
-              px: 4, 
-              py: 1.5
-            }}
-          >
-            Try Improved Form
-          </Button>
+
         </Box>
         
         <Box sx={{ mt: 4 }}>
