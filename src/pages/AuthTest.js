@@ -18,7 +18,8 @@ const AuthTest = () => {
       
       // Test backend authentication - pass Clerk session ID for verification
       const idToSend = sessionId || token;
-      const response = await fetch('http://localhost:8000/api/auth/clerk-auth', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/auth/clerk-auth`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${idToSend}`,
