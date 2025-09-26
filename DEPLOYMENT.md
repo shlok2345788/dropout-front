@@ -58,4 +58,7 @@ Your frontend is trying to connect to `localhost:8000` which doesn't exist in pr
 3. Add `REACT_APP_API_URL=https://your-backend-url` to Vercel environment variables
 4. Redeploy your frontend
 
-**Current Error:** `localhost:8000/api/*` - Connection refused because localhost doesn't exist on Vercel
+**✅ BACKEND DEPLOYED:** `https://dropout-back.onrender.com`
+**✅ FRONTEND DEPLOYED:** `https://dropout-front-29gn-offhna73k-shlok2345788s-projects-ivwe2igbm.vercel.app`
+
+**Current Status:** Backend is deployed but you need to update Vercel environment variables
