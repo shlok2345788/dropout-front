@@ -29,6 +29,7 @@ import {
 } from '@mui/icons-material';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
+import { authAPI } from '../services/api'; // Add this import
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const Signup = () => {
     return () => unsub();
   }, [navigate]);
 
+  // New function to handle email signup with backend
   const handleEmailSignup = async (e) => {
     e.preventDefault();
     setError('');
@@ -85,11 +87,27 @@ const Signup = () => {
     setLoading(true);
     
     try {
+      // First create user in Firebase
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName) {
         await updateProfile(cred.user, { displayName });
       }
-      navigate('/dashboard');
+      
+      // Then sync with backend
+      try {
+        // Get Firebase ID token
+        const idToken = await cred.user.getIdToken();
+        
+        // Sync with backend using Firebase token
+        await authAPI.firebaseAuthLogin(idToken);
+        
+        // Navigate to dashboard
+        navigate('/dashboard');
+      } catch (backendError) {
+        console.error('Backend sync error:', backendError);
+        // Even if backend sync fails, we can still proceed with Firebase auth
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error('Signup error:', err);
       let errorMessage = 'Failed to create account. Please try again.';
@@ -116,7 +134,16 @@ const Signup = () => {
     
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      
+      // Sync with backend using Google ID token
+      try {
+        const idToken = await result.user.getIdToken();
+        await authAPI.googleVerify({ id_token: idToken });
+      } catch (backendError) {
+        console.error('Backend sync error:', backendError);
+      }
+      
       navigate('/dashboard');
     } catch (err) {
       console.error('Google signup error:', err);

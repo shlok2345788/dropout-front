@@ -12,12 +12,15 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 second timeout
+  timeout: 15000, // Increased timeout to 15 seconds
 });
 
 // Attach JWT token from Firebase if present
 api.interceptors.request.use(
   (config) => {
+    // Log request for debugging
+    console.log('Making API request to:', config.url);
+    
     if (!config.headers || !config.headers.Authorization) {
       const jwtToken = localStorage.getItem('jwt_token');
       if (jwtToken) {
@@ -26,14 +29,31 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('Request interceptor error:', error);
+    return Promise.reject(error);
+  }
 );
 
 // Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    console.error('API Error Details:', {
+      message: error.message,
+      code: error.code,
+      response: error.response?.data,
+      status: error.response?.status,
+      url: error.config?.url,
+      method: error.config?.method
+    });
+    
+    // Handle CORS errors specifically
+    if (error.message === 'Network Error') {
+      console.error('This appears to be a CORS or network connectivity issue.');
+      console.error('Please ensure the backend is running and CORS is properly configured.');
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -48,6 +68,14 @@ export const authAPI = {
   me: () => api.get('/api/auth/me'),
   getDashboard: () => api.get('/api/auth/dashboard'),
   markFormCompleted: (studentId) => api.post('/api/auth/complete-form', { student_id: studentId }),
+  
+  // New methods for Firebase authentication
+  firebaseAuthLogin: (idToken) => api.post('/api/auth/firebase-auth', {}, {
+    headers: {
+      'Authorization': `Bearer ${idToken}`
+    }
+  }),
+  googleVerify: (data) => api.post('/api/auth/google-verify', data),
 };
 
 // Student API functions

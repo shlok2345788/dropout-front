@@ -30,6 +30,7 @@ import {
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { authAPI } from '../services/api'; // Add this import
 
 const Login = () => {
   const navigate = useNavigate();
@@ -49,13 +50,28 @@ const Login = () => {
     }
   }, [user, profileCompleted, navigate]);
 
+  // New function to handle email login with backend sync
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // First sign in with Firebase
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Then sync with backend
+      try {
+        // Get Firebase ID token
+        const idToken = await cred.user.getIdToken();
+        
+        // Sync with backend using Firebase token
+        await authAPI.firebaseAuthLogin(idToken);
+      } catch (backendError) {
+        console.error('Backend sync error:', backendError);
+        // Even if backend sync fails, we can still proceed with Firebase auth
+      }
+      
       // Navigation will be handled by useEffect
     } catch (err) {
       console.error('Login error:', err);
@@ -83,7 +99,16 @@ const Login = () => {
     
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      
+      // Sync with backend using Google ID token
+      try {
+        const idToken = await result.user.getIdToken();
+        await authAPI.googleVerify({ id_token: idToken });
+      } catch (backendError) {
+        console.error('Backend sync error:', backendError);
+      }
+      
       // Navigation will be handled by useEffect
     } catch (err) {
       console.error('Google login error:', err);
